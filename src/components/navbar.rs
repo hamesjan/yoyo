@@ -27,13 +27,13 @@ pub struct NavBar{
 #[derive(Default, Clone, Copy, Display, FromRepr, EnumIter)]
 enum SelectedTab {
     #[default]
-    #[strum(to_string = "Tab 1")]
+    #[strum(to_string = "Home")]
     Tab1,
-    #[strum(to_string = "Tab 2")]
+    #[strum(to_string = "Notepad")]
     Tab2,
-    #[strum(to_string = "Tab 3")]
+    #[strum(to_string = "Schedule")]
     Tab3,
-    #[strum(to_string = "Tab 4")]
+    #[strum(to_string = "Settings")]
     Tab4,
 }
 
@@ -47,9 +47,9 @@ impl NavBar {
         self.selected_tab = self.selected_tab.next();
     }
 
-    pub fn previous_tab(&mut self) {
-        self.selected_tab = self.selected_tab.previous();
-    }
+    // pub fn previous_tab(&mut self) {
+    //     self.selected_tab = self.selected_tab.previous();
+    // }
 
     fn render_tabs(&self, area: Rect, buf: &mut Buffer) {
         let titles = SelectedTab::iter().map(SelectedTab::title);
@@ -77,9 +77,6 @@ impl Component for NavBar {
 
     fn update(&mut self, action: Action) -> Result<Option<Action>> {
         match action {
-            Action::PrevTab => {
-                self.previous_tab();
-            }
             Action::NextTab => { 
                 self.next_tab();
             }
@@ -104,17 +101,18 @@ impl Component for NavBar {
 
 impl SelectedTab {
     /// Get the previous tab, if there is no previous tab return the current tab.
-    fn previous(self) -> Self {
-        let current_index: usize = self as usize;
-        let previous_index = current_index.saturating_sub(1);
-        Self::from_repr(previous_index).unwrap_or(self)
-    }
+    // fn previous(self) -> Self {
+    //     let current_index: usize = self as usize;
+    //     let previous_index = current_index.saturating_sub(1);
+    //     Self::from_repr(previous_index).unwrap_or(self)
+    // }
 
     /// Get the next tab, if there is no next tab return the current tab.
     fn next(self) -> Self {
         let current_index = self as usize;
-        let next_index = current_index.saturating_add(1);
-        Self::from_repr(next_index).unwrap_or(self)
+        let count = SelectedTab::iter().count();
+        let next_index = (current_index + 1) % count;
+        Self::from_repr(next_index).unwrap()
     }
 }
 
@@ -135,11 +133,11 @@ impl Widget for &mut NavBar {
 }
 
 fn render_title(area: Rect, buf: &mut Buffer) {
-    "Ratatui Tabs Example".bold().render(area, buf);
+    "yoyo v0.0.1".bold().render(area, buf);
 }
 
 fn render_footer(area: Rect, buf: &mut Buffer) {
-    Line::raw("◄ ► to change tab | Press q to quit")
+    Line::raw("<tab> to change tab | Press q to quit")
         .centered()
         .render(area, buf);
 }
@@ -199,10 +197,10 @@ impl SelectedTab {
 
     const fn palette(self) -> tailwind::Palette {
         match self {
-            Self::Tab1 => tailwind::BLUE,
-            Self::Tab2 => tailwind::EMERALD,
-            Self::Tab3 => tailwind::INDIGO,
-            Self::Tab4 => tailwind::RED,
+            Self::Tab1 => tailwind::ZINC,
+            Self::Tab2 => tailwind::ZINC,
+            Self::Tab3 => tailwind::ZINC,
+            Self::Tab4 => tailwind::ZINC,
         }
     }
 }

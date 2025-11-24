@@ -1,0 +1,15 @@
+usize - data type that fits pointer to whatever address, will depend on target architecture (i.e. 32 bit/64 bit)
+saturating_add - doesn't wrap around
+
+unwrap_or is a method on Option<T>.
+
+It means:
+
+If the Option is Some(value), return the value.
+If the Option is None, return the fallback value you provide.
+
+unwrap() is a method on Option<T>:
+
+If the Option is Some(value) → return the value
+
+If it is None → panic and crash
